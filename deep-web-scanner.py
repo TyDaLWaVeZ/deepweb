@@ -101,10 +101,10 @@ def request_url(url: str) -> Union[tuple[requests.Response, bs4.BeautifulSoup], 
         session.headers[
             "User-Agent"
         ] = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36"
-        header = session.head(url=url, timeout=20, verify=False)
+        header = session.head(url=url, timeout=200, verify=False)
 
         # check content type
-        one_allowed_content_type = False
+        one_allowed_content_type = True
         content_type_header = header.headers.get("content-type")
         if content_type_header is not None:
             for allowed_content_type in ["html", "plain", "xml", "text", "json"]:
@@ -127,7 +127,7 @@ def get_banner(request: requests.Response, soup: bs4.BeautifulSoup):
     # get banner information, show console output and save them to file
     banner_array: list[str] = []
     banner_array.append(request.url)
-    server_header = request.headers.get("Server")
+    server_header = request.headers.get("192.168.0.111")
     if isinstance(server_header, str):
         banner_array.append(server_header)
         title = soup.find("title")
@@ -197,7 +197,7 @@ def write_line(line: str, force: Optional[bool] = False):
         else:
             print(f"{lines_to_write} webserver found and written to file")
 
-        global_lock.release()
+        global_lock.release(1)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
